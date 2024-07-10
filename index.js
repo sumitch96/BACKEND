@@ -1,54 +1,53 @@
+const path = require("path");
+const fs = require("fs");
+const { log } = require("console");
 
-const crypto= require("crypto")
-let result
-let arguments= process.argv.slice(2)
-let operation= arguments[0]
-let a = +arguments[1]
-let b =+arguments[2]
-if (arguments.length<1){
-    console.log("provide correct arguments");
-}
+const operation = process.argv[2];
+const file = process.argv[3];
+const content = process.argv[4];
+
 switch (operation) {
-    case 'add':
-      result = a + b;
-      console.log(result);
-      break;
-    case 'sub':
-      result = a - b;
-      console.log(result);
-      break;
-    case 'mult':
-      result = a * b;
-      console.log(result);
-      break;
-    case 'divide':
-      if (b === 0) {
-        console.log("Cannot divide by zero");
-      } else {
-        result = a / b;
-        console.log(result);
-      }
-      break;
-    case 'sin':
-      result = Math.sin(a);
-      console.log(result);
-      break;
-    case 'cos':
-      result = Math.cos(a);
-      console.log(result);
-      break;
-    case 'tan':
-      result = Math.tan(a);
-      console.log(result);
-      break;
-    case 'random':
-      if (isNaN(a) || a <= 0) {
-        console.log("Provide a proper length");
-      } else {
-        result = crypto.randomBytes(a).toString('hex');
-        console.log(result);
-      }
-      break;
-    default:
-      console.log("Invalid operatio")
-    }
+  case 'read':
+     console.log(fs.readFileSync('./text.txt','utf-8'))
+
+    break
+    case 'delete':
+        fs.unlink("./text.txt",(err)=>{
+            if (err){
+                console.log("Erroe Occer")
+            }else{
+            console.log("File deleted succesfully")
+            }
+        })
+        break
+    case 'append' :
+        fs.appendFileSync("./text.txt",file)
+        console.log("Data added sucesfully")
+        break
+    
+
+    case 'create':
+        fs.writeFileSync("./text.txt","Hello aman")
+        console.log("Created Successfully")
+        break
+    case 'rename' :
+        fs.renameSync("./text.txt", "./New.txt")
+        console.log("Renamed succesfully")
+        break
+    
+    case 'list' :
+        let vir = file||"."
+        fs.readdir(vir, (err,data)=>{
+            if (err){
+                console.log("error accur")
+            }else{
+                data.map((element)=>{
+                    console.log(element)
+                })
+            }
+        })
+        break
+
+  default:
+    console.log(`Invalid operation '${operation}'`);
+}
